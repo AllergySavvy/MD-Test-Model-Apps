@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">TestModelAndroid</string>
+    <string name="allergy_2">Allergy 2</string>
+    <string name="send_input_to_model">Send Input to Model</string>
+    <string name="allergy_1">Allergy 1</string>
+    <string name="model_test_input_from_user_allergy_type">Model Test Input from User \n Allergy Type</string>
+    <string name="allergy_3">Allergy 3</string>
 </resources>
