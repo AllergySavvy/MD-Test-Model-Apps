@@ -2,6 +2,7 @@ package com.capstone.testmodelandroid
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,7 @@ import java.nio.charset.StandardCharsets
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -43,8 +45,23 @@ class MainActivity : AppCompatActivity() {
         try {
             val model = Model.newInstance(this)
 
-            val inputBuffer = TensorBuffer.createFixedSize(intArrayOf(1, 1), DataType.STRING)
-            val byteBuffer = ByteBuffer.wrap(combinedInputUser.toByteArray(StandardCharsets.UTF_8))
+
+            val expectedInputSize = 40
+            val inputBytes = combinedInputUser.toByteArray(StandardCharsets.UTF_8)
+
+            val byteBuffer = ByteBuffer.allocateDirect(expectedInputSize)
+            byteBuffer.put(inputBytes)
+
+            if (inputBytes.size < expectedInputSize) {
+                for (i in inputBytes.size until expectedInputSize) {
+                    byteBuffer.put(0.toByte())
+                }
+            }
+
+            byteBuffer.rewind()
+
+            val inputBuffer =
+                TensorBuffer.createFixedSize(intArrayOf(1, expectedInputSize), DataType.UINT8)
             inputBuffer.loadBuffer(byteBuffer)
 
             val outputModel = model.process(inputBuffer)
@@ -61,10 +78,12 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+            Log.d(TAG, e.message.toString())
         }
     }
 
     companion object {
         private const val RECIPES = "recipes"
+        private const val TAG = "MainActivity"
     }
 }
