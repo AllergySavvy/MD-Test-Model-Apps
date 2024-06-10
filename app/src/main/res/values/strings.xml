@@ -5,4 +5,5 @@
     <string name="allergy_1">Allergy 1</string>
     <string name="model_test_input_from_user_allergy_type">Model Test Input from User \n Allergy Type</string>
     <string name="allergy_3">Allergy 3</string>
+    <string name="result_output_from_model">Result output from model</string>
 </resources>
